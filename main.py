@@ -28,10 +28,14 @@ score.speed(20)
 score.hideturtle()
 score.penup()
 score.color("white")
-score.goto(-300, 70)
-score.write("Score", move=False, align="left", font=("Verdana", 20, "normal"))
-score.goto(-300, 0)
-score.write(player_score, move=False, align="left", font=("Verdana", 50, "bold"))
+
+#Write Score
+def write_score():
+  score.goto(-300, 70)
+  score.write("Score", move=False, align="left", font=("Verdana", 20, "normal"))
+  score.goto(-300, 0)
+  score.write(player_score, move=False, align="left", font=("Verdana", 50, "bold"))
+write_score()
 
 #Cloud and Star Lists
 sky_objects = []
@@ -73,7 +77,7 @@ def make_cloud(index):
   wn.addshape(cloud_or_star[index])
   sky_objects[index].shape(cloud_or_star[index])
 
-# adding obstacle image to the background
+# adding down obstacle image to the background
 def make_obstacle_down(index):
   obstacles_down[index].hideturtle()
   obstacles_down[index].pu()
@@ -83,7 +87,7 @@ def make_obstacle_down(index):
   wn.addshape(pipe_down[index])
   obstacles_down[index].shape(pipe_down[index])
   obstacles_down[index].showturtle()
-
+# adding up obstacle image to the background
 def make_obstacle_up(index):
   obstacles_up[index].hideturtle()
   obstacles_up[index].pu()
@@ -97,7 +101,7 @@ def make_obstacle_up(index):
 
 
 # making the clouds move backward
-#use while and if statement to move turtle
+#use if statement to move turtle
 def clouds_moves(index):
   if sky_objects[index].xcor() > -400:
     sky_objects[index].showturtle()
@@ -109,6 +113,44 @@ def clouds_moves(index):
     sky_objects[index].shape(cloud_or_star[index])
     sky_objects[index].setx (rand.randint(400,600))
     sky_objects[index].sety (rand.randint(200,400))
+# making the down obstacles move and reset
+def obstacles_down_moves(index):
+  if obstacles_down[index].xcor() > -400:
+    obstacles_down[index].showturtle()
+    obstacles_down[index].backward(25)
+  else:
+    obstacles_down[index].clear()
+    wn.addshape('pipe_down_small.gif')
+    obstacles_down[index].shape('pipe_down_small.gif')
+    obstacles_down[index].setx(250)
+    obstacles_down[index].sety(320)
+#making the up obstacles move and reset
+def obstacles_up_moves(index):      
+  if obstacles_up[index].xcor() > -400:
+    obstacles_up[index].showturtle()
+    obstacles_up[index].backward(25)
+  else:
+    obstacles_up[index].clear()
+    wn.addshape('pipe_up_three.gif')
+    obstacles_up[index].shape('pipe_up_three.gif')
+    obstacles_up[index].setx (250)
+    obstacles_up[index].sety (-125)
+
+def game_over(index): 
+  global player_score
+  if (flappy_bird.xcor() + 10  > obstacles_up[index].xcor() - 50) and ((flappy_bird.xcor()) - 10 < obstacles_up[index].xcor() + 50):
+    flappy_bird.hideturtle()
+    score.setposition(0,0)
+    score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
+    wn.update()
+    """
+    if obstacles_up[index].xcor() + 30 < flappy_bird.xcor() - 10:
+      player_score += 1
+      score.clear()
+      write_score()
+    """
+    
+
 
 #Makes the wings of the Flappy Bird Flap
 def wing_flap():
@@ -133,6 +175,7 @@ for i in range(4):
 for i in range(2): 
   make_obstacle_down(i)
   make_obstacle_up(i)
+
 # User Input
 wn.listen()
 wn.onkeypress(jump, "space")
@@ -152,6 +195,14 @@ while True:
         flappy_bird.shape('stand-still_bird.gif')
     for i in range(4):
       clouds_moves(i)
+    for i in range(2):
+      obstacles_down_moves(i)
+      obstacles_up_moves(i)
+      game_over(i)
+
+
+      
+          
 #Window
 wn.listen()
 wn.mainloop()
