@@ -1,8 +1,0 @@
-https://ezgif.com/resize/ezgif-6-fd3b066ce39f.gif
-for Resizing gifs if needed
-
-#PNG to gif
-https://ezgif.com/apng-to-gif/ezgif-4-f8e04962505c.png
-
-#possible display score?
-https://opensource.com/article/20/1/add-scorekeeping-your-python-game
