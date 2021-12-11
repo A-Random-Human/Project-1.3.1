@@ -17,6 +17,7 @@ flappy_bird.penup()
 flappy_bird.setposition(-150,0)
 flappy_bird.dy = 1 
 player_score = 0
+game_not_over = "yes"
 
 #Making it a Flappy Bird with Image
 wn.addshape('stand-still_bird.gif')
@@ -33,8 +34,8 @@ score.color("white")
 def write_score():
   score.goto(-300, 70)
   score.write("Score", move=False, align="left", font=("Verdana", 20, "normal"))
-  score.goto(-300, 0)
-  score.write(player_score, move=False, align="left", font=("Verdana", 50, "bold"))
+  score.goto(-300, 30)
+  score.write(player_score, move=False, align="left", font=("Verdana", 30, "bold"))
 write_score()
 
 #Cloud and Star Lists
@@ -73,7 +74,7 @@ def make_cloud(index):
   sky_objects[index].pu()
   sky_objects[index].setx (rand.randint(400,600))
   sky_objects[index].sety (rand.randint(200,400))
-  sky_objects[index].speed(50)
+  sky_objects[index].speed(10)
   wn.addshape(cloud_or_star[index])
   sky_objects[index].shape(cloud_or_star[index])
 
@@ -81,9 +82,9 @@ def make_cloud(index):
 def make_obstacle_down(index):
   obstacles_down[index].hideturtle()
   obstacles_down[index].pu()
-  obstacles_down[index].setx (index*200)
-  obstacles_down[index].sety (320)
-  obstacles_down[index].speed(50)
+  obstacles_down[index].setx (index*200 + 400)
+  obstacles_down[index].sety (350)
+  obstacles_down[index].speed(30)
   wn.addshape(pipe_down[index])
   obstacles_down[index].shape(pipe_down[index])
   obstacles_down[index].showturtle()
@@ -91,14 +92,12 @@ def make_obstacle_down(index):
 def make_obstacle_up(index):
   obstacles_up[index].hideturtle()
   obstacles_up[index].pu()
-  obstacles_up[index].setx (index*200)
+  obstacles_up[index].setx (index*200 + 400)
   obstacles_up[index].sety (-125)
-  obstacles_up[index].speed(50)
+  obstacles_up[index].speed(30)
   wn.addshape(pipe_up[index])
   obstacles_up[index].shape(pipe_up[index])
   obstacles_up[index].showturtle()
-
-
 
 # making the clouds move backward
 #use if statement to move turtle
@@ -123,7 +122,7 @@ def obstacles_down_moves(index):
     wn.addshape('pipe_down_small.gif')
     obstacles_down[index].shape('pipe_down_small.gif')
     obstacles_down[index].setx(250)
-    obstacles_down[index].sety(320)
+    obstacles_down[index].sety(350)
 #making the up obstacles move and reset
 def obstacles_up_moves(index):      
   if obstacles_up[index].xcor() > -400:
@@ -137,21 +136,28 @@ def obstacles_up_moves(index):
     obstacles_up[index].sety (-125)
 
 def game_over(index): 
-  global player_score
-  if (flappy_bird.xcor() + 10  > obstacles_up[index].xcor() - 50) and ((flappy_bird.xcor()) - 10 < obstacles_up[index].xcor() + 50):
+  global game_not_over
+  if (flappy_bird.xcor() + 10  > obstacles_up[index].xcor() - 50) and ((flappy_bird.ycor()) - 10 < obstacles_up[index].ycor() + 200):
+    game_not_over = "no"
     flappy_bird.hideturtle()
     score.setposition(0,0)
     score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
     wn.update()
-    """
-    if obstacles_up[index].xcor() + 30 < flappy_bird.xcor() - 10:
-      player_score += 1
-      score.clear()
-      write_score()
-    """
+
+  if (flappy_bird.xcor() +10  > obstacles_down[index].xcor() - 50) and ((flappy_bird.ycor()) + 10 > obstacles_down[index].ycor() -170):  
+      game_not_over = "no, it is over"
+      flappy_bird.hideturtle()
+      score.setposition(0,0)
+      score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
+      wn.update()
     
-
-
+    
+def update_score():
+  global player_score
+  player_score += 0.25
+  score.clear()
+  write_score()
+    
 #Makes the wings of the Flappy Bird Flap
 def wing_flap():
     flappy_bird.shape('stand-still_bird.gif')
@@ -181,28 +187,27 @@ wn.listen()
 wn.onkeypress(jump, "space")
 
 while True:
-    flappy_bird.dy -= 0.05
-    wn.update()
-    flappy_bird.dy += 0.05
-    # Downward force on the flappy bird
-    flappy_bird.dy += -0.4 
-    #Moves Flappy Bird/Allows Flappy Bird to Move
-    flappy_bird.sety(flappy_bird.ycor() + flappy_bird.dy)
-    # Stops flappy bird from leaving the screen
-    if flappy_bird.ycor() < -290:
-        flappy_bird.dy = 0
-        flappy_bird.sety(-290)
-        flappy_bird.shape('stand-still_bird.gif')
-    for i in range(4):
-      clouds_moves(i)
-    for i in range(2):
-      obstacles_down_moves(i)
-      obstacles_up_moves(i)
-      game_over(i)
+  flappy_bird.dy -= 0.05
+  wn.update()
+  flappy_bird.dy += 0.05
+  # Downward force on the flappy bird
+  flappy_bird.dy += -0.4 
+  #Moves Flappy Bird/Allows Flappy Bird to Move
+  flappy_bird.sety(flappy_bird.ycor() + flappy_bird.dy)
+  # Stops flappy bird from leaving the screen
+  if flappy_bird.ycor() < -290:
+      flappy_bird.dy = 0
+      flappy_bird.sety(-290)
+      flappy_bird.shape('stand-still_bird.gif')
+  for i in range(4):
+    clouds_moves(i)
+  for i in range(2):
+    obstacles_down_moves(i)
+    obstacles_up_moves(i)
+    game_over(i)
+  if game_not_over == "yes":
+      update_score()
 
-
-      
-          
 #Window
 wn.listen()
 wn.mainloop()
