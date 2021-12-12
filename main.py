@@ -8,7 +8,7 @@ import random as rand
 wn = trtl.Screen()
 trtl.screensize(canvwidth=640, canvheight=980)
 wn.title("Flappy Bird --- By Haley and Jane  P:6")
-wn.bgpic("background3.png")
+wn.bgpic("background.png")
 
 #Creating Flappy Bird Object
 flappy_bird = trtl.Turtle()
@@ -43,20 +43,17 @@ sky_objects = []
 cloud_or_star = []
 clouds_and_stars = ['cloud1.gif', 'cloud2.gif','cloud3.gif','cloud4.gif', 'cloud5.gif', 'star1.gif','star2.gif','star3.gif']
 
-num = len(clouds_and_stars) - 1
-
 #Obstacle list
 obstacles_down = []
 pipe_down = []
 obstacles_up = []
 pipe_up = []
-obstacle_list = ['pipe_down_small.gif','pipe_up_three.gif']
+obstacle_list = ['pipe_down.gif','pipe_up.gif']
 #---------------------------FUNCTIONS---------------------------
 #adding more turtles and assigning gifs to each turtle
 for i in range(4):
   sky_objects.append(trtl.Turtle())
   cloud_or_star.append(rand.choice(clouds_and_stars))
-
 
 #Creating Pipes down
 for i in range(2):
@@ -88,6 +85,7 @@ def make_obstacle_down(index):
   wn.addshape(pipe_down[index])
   obstacles_down[index].shape(pipe_down[index])
   obstacles_down[index].showturtle()
+
 # adding up obstacle image to the background
 def make_obstacle_up(index):
   obstacles_up[index].hideturtle()
@@ -104,7 +102,6 @@ def make_obstacle_up(index):
 def clouds_moves(index):
   if sky_objects[index].xcor() > -400:
     sky_objects[index].showturtle()
-   # sky_objects[index].speed(50)
     sky_objects[index].backward(25)
   else:
     sky_objects[index].clear()
@@ -112,6 +109,7 @@ def clouds_moves(index):
     sky_objects[index].shape(cloud_or_star[index])
     sky_objects[index].setx (rand.randint(400,600))
     sky_objects[index].sety (rand.randint(200,400))
+
 # making the down obstacles move and reset
 def obstacles_down_moves(index):
   if obstacles_down[index].xcor() > -400:
@@ -119,10 +117,11 @@ def obstacles_down_moves(index):
     obstacles_down[index].backward(25)
   else:
     obstacles_down[index].clear()
-    wn.addshape('pipe_down_small.gif')
-    obstacles_down[index].shape('pipe_down_small.gif')
+    wn.addshape('pipe_down.gif')
+    obstacles_down[index].shape('pipe_down.gif')
     obstacles_down[index].setx(250)
     obstacles_down[index].sety(350)
+
 #making the up obstacles move and reset
 def obstacles_up_moves(index):      
   if obstacles_up[index].xcor() > -400:
@@ -130,27 +129,29 @@ def obstacles_up_moves(index):
     obstacles_up[index].backward(25)
   else:
     obstacles_up[index].clear()
-    wn.addshape('pipe_up_three.gif')
-    obstacles_up[index].shape('pipe_up_three.gif')
+    wn.addshape('pipe_up.gif')
+    obstacles_up[index].shape('pipe_up.gif')
     obstacles_up[index].setx (250)
     obstacles_up[index].sety (-125)
 
-def game_over(index): 
-  global game_not_over
+def game_over ():
+  global game_not_over, player_score
+  if player_score == 4.75:
+    score.clear()
+    player_score = 0
+    write_score()
+  game_not_over = "no, it's over"
+  flappy_bird.hideturtle()
+  score.setposition(0,0)
+  score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
+  wn.update()
+
+def when_game_over(index): 
   if (flappy_bird.xcor() + 10  > obstacles_up[index].xcor() - 50) and ((flappy_bird.ycor()) - 10 < obstacles_up[index].ycor() + 200):
-    game_not_over = "no"
-    flappy_bird.hideturtle()
-    score.setposition(0,0)
-    score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
-    wn.update()
+    game_over()
 
   if (flappy_bird.xcor() +10  > obstacles_down[index].xcor() - 50) and ((flappy_bird.ycor()) + 10 > obstacles_down[index].ycor() -170):  
-      game_not_over = "no, it is over"
-      flappy_bird.hideturtle()
-      score.setposition(0,0)
-      score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
-      wn.update()
-    
+    game_over()
     
 def update_score():
   global player_score
@@ -204,7 +205,7 @@ while True:
   for i in range(2):
     obstacles_down_moves(i)
     obstacles_up_moves(i)
-    game_over(i)
+    when_game_over(i)
   if game_not_over == "yes":
       update_score()
 
