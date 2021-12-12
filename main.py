@@ -200,8 +200,10 @@ while True:
       flappy_bird.dy = 0
       flappy_bird.sety(-290)
       flappy_bird.shape('stand-still_bird.gif')
+  #Allows Clouds to Move
   for i in range(4):
     clouds_moves(i)
+  #Allows Obstacles to Move
   for i in range(2):
     obstacles_down_moves(i)
     obstacles_up_moves(i)
@@ -210,5 +212,4 @@ while True:
       update_score()
 
 #Window
-wn.listen()
 wn.mainloop()
