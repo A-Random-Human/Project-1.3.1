@@ -10,7 +10,7 @@ trtl.screensize(canvwidth=640, canvheight=980)
 wn.title("Flappy Bird --- By Haley and Jane  P:6")
 wn.bgpic("background.png")
 
-#Creating Flappy Bird Object
+#Creating Flappy Bird Object.
 flappy_bird = trtl.Turtle()
 flappy_bird.speed(50)
 flappy_bird.penup()
