@@ -30,13 +30,17 @@ score.hideturtle()
 score.penup()
 score.color("white")
 
-#Write Score
-def write_score():
+#Ask User Prompt or Write Score
+def write_score(isScore = True):
   score.goto(-300, 70)
-  score.write("Score", move=False, align="left", font=("Verdana", 20, "normal"))
-  score.goto(-300, 30)
-  score.write(player_score, move=False, align="left", font=("Verdana", 30, "bold"))
-write_score()
+  if isScore:
+    score.write("Score", move=False, align="left", font=("Verdana", 20, "normal"))
+    score.goto(-300, 30)
+    score.write(player_score, move=False, align="left", font=("Verdana", 30, "bold"))
+  else:
+    score.write("Press Space to Jump!", move=False, align="left", font=("Verdana", 20, "normal"))
+#Ask User Prompt (Space) for jump
+write_score(False)
 
 #Cloud and Star Lists
 sky_objects = []
@@ -146,6 +150,7 @@ def game_over ():
   score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
   wn.update()
 
+# when flappy bird reaches certain x and y coordinates, reset the game with the game_over function
 def when_game_over(index): 
   if (flappy_bird.xcor() + 10  > obstacles_up[index].xcor() - 50) and ((flappy_bird.ycor()) - 10 < obstacles_up[index].ycor() + 200):
     game_over()
