@@ -31,16 +31,15 @@ score.penup()
 score.color("white")
 
 #Ask User Prompt or Write Score
-def write_score(isScore = True):
-  score.goto(-300, 70)
-  if isScore:
+def write_score():
     score.write("Score", move=False, align="left", font=("Verdana", 20, "normal"))
     score.goto(-300, 30)
     score.write(player_score, move=False, align="left", font=("Verdana", 30, "bold"))
   else:
+    score.color("black")
     score.write("Press Space to Jump!", move=False, align="left", font=("Verdana", 20, "normal"))
 #Ask User Prompt (Space) for jump
-write_score(False)
+#write_score(False)
 
 #Cloud and Star Lists
 sky_objects = []
@@ -102,7 +101,7 @@ def make_obstacle_up(index):
   obstacles_up[index].showturtle()
 
 # making the clouds move backward
-#use if statement to move turtle
+#uses if statement to move turtle
 def clouds_moves(index):
   if sky_objects[index].xcor() > -400:
     sky_objects[index].showturtle()
@@ -146,7 +145,10 @@ def game_over ():
     write_score()
   game_not_over = "no, it's over"
   flappy_bird.hideturtle()
+
   score.setposition(0,0)
+  score.color("green")
+
   score.write("GAME OVER", move=False, align="center", font=("Verdana", 30, "bold"))
   wn.update()
 
